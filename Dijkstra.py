@@ -13,4 +13,4 @@ def readJson():
 
 grafo = readJson()
 
-print(grafo)
+print(grafo, 'ok')
