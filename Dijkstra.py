@@ -5,10 +5,13 @@ import json
 
 class DijkstraAlgorithm:
 
-    arquivo = None
+    file      = None
+    graphCost = {}
 
-    def __init__(self):
-        self.arquivo = self.readJson()
+    def __init__(self, node):
+        self.file = self.readJson()
+        self.mountTableCost(self.file['nodes'], node)
+        self.dijkstra(self.file,node)
 
     # Lê o arquivo json
     def readJson(self):
@@ -19,6 +22,14 @@ class DijkstraAlgorithm:
             assert isinstance(json_file, object)
             return json_file
 
+    # Monta da table de custo dos nós
+    def mountTableCost(self,nodes, node):
+        for n in nodes:
+            # Add custo zero para o nó inicial
+            if n == node:
+                self.graphCost[n] = 0
+            else:
+                self.graphCost[n] = -1
 
     def dijkstra(self, graph, node = None):
         nodes    = graph['nodes']
@@ -36,8 +47,12 @@ class DijkstraAlgorithm:
             if vertices[item][0] == node and vertices[item][1] not in path:
                 path.append(vertices[item][1])
                 nodes.append([vertices[item][1],vertices[item][2]])
+                print(vertices[item][2])
             elif vertices[item][1] == node and vertices[item][0] not in path:
                 path.append(vertices[item][0])
                 nodes.append([vertices[item][0],vertices[item][2]])
 
         print(nodes)
+
+
+DijkstraAlgorithm('A')
