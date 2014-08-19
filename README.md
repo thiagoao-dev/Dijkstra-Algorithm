@@ -1,4 +1,4 @@
 DijkstraAlgorithm
 =================
 
-Project developed for the course in Information Systems. It is based on the Dijkstra algorithm to search in a graph from a json file
+Project developed to Information Systems course. It is based on the Dijkstra algorithm to search in a graph from a json file
