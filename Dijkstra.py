@@ -19,18 +19,18 @@ class DijkstraAlgorithm:
     # Dijkstra Algorithm Core
     def dijkstra(self, graph, node = None):
 
-        self.unvisited = self.file['nodes'] # Armazeno todos os nós existentes
+        self.unvisited = self.file['nodes'] # Set all ndoes
 
-        # Verifica se o node foi informado
+        # Verify is the starting node was informed
         if node == None:
-            self.current = self.unvisited.pop()
+            self.current = self.unvisited.pop() # Choose an aleatory node
         else:
             self.current = node
 
-        # Inicia o primeiro estado
+        # Fill with the first visited node
         self.visited.append(self.current)
 
-        # Varre todos os nodes
+        # Goes on all nodes
         while self.unvisited:
             print(self.visited)
             self.mountIteration(self.file['nodes'], self.current)
@@ -40,16 +40,16 @@ class DijkstraAlgorithm:
 
         pass
 
-    # Lê o arquivo json
+    # Read Json Method
     def readJson(self):
-        # Abre o arquivo conforme o caminho informado
+        # Open the informed file path
         with open("grafod.json") as json_file:
             json_file = json.load(json_file)
-            # Testa o objeto
+            # Test the object
             assert isinstance(json_file, object)
             return json_file
 
-    # Monta da table de custo dos nós
+    # Mount the table iteration with node cost Method
     def mountIteration(self, nodes, node):
         for n in nodes:
             # Add custo zero para o nó inicial
