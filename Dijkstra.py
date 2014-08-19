@@ -5,13 +5,40 @@ import json
 
 class DijkstraAlgorithm:
 
-    file      = None
-    graphCost = {}
+    file = None
+    visited = []
+    unvisited = []
+    current = None
+    iteration = {}
 
-    def __init__(self, node):
-        self.file = self.readJson()
-        self.mountTableCost(self.file['nodes'], node)
-        self.dijkstra(self.file,node)
+    # Constructor Method
+    def __init__(self, node = None):
+        self.file = self.readJson() # Read the json file
+        self.dijkstra(self.file,node) # Invoke the algorithm
+
+    # Dijkstra Algorithm Core
+    def dijkstra(self, graph, node = None):
+
+        self.unvisited = self.file['nodes'] # Armazeno todos os nós existentes
+
+        # Verifica se o node foi informado
+        if node == None:
+            self.current = self.unvisited.pop()
+        else:
+            self.current = node
+
+        # Inicia o primeiro estado
+        self.visited.append(self.current)
+
+        # Varre todos os nodes
+        while self.unvisited:
+            print(self.visited)
+            self.mountIteration(self.file['nodes'], self.current)
+            self.expandir(self.file['vertices'], self.current)
+            self.current = self.unvisited.pop()
+            self.visited.append(self.current)
+
+        pass
 
     # Lê o arquivo json
     def readJson(self):
@@ -23,20 +50,13 @@ class DijkstraAlgorithm:
             return json_file
 
     # Monta da table de custo dos nós
-    def mountTableCost(self,nodes, node):
+    def mountIteration(self, nodes, node):
         for n in nodes:
             # Add custo zero para o nó inicial
             if n == node:
-                self.graphCost[n] = 0
+                self.iteration[n] = 0
             else:
-                self.graphCost[n] = -1
-
-    def dijkstra(self, graph, node = None):
-        nodes    = graph['nodes']
-        vertices = graph['vertices']
-        print(vertices)
-        self.expandir(vertices, node)
-        pass
+                self.iteration[n] = float("inf")
 
     # Função que retorna as possíveis ações
     def expandir(self, vertices, node):
@@ -47,7 +67,6 @@ class DijkstraAlgorithm:
             if vertices[item][0] == node and vertices[item][1] not in path:
                 path.append(vertices[item][1])
                 nodes.append([vertices[item][1],vertices[item][2]])
-                print(vertices[item][2])
             elif vertices[item][1] == node and vertices[item][0] not in path:
                 path.append(vertices[item][0])
                 nodes.append([vertices[item][0],vertices[item][2]])
