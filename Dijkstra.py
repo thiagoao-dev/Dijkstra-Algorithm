@@ -19,7 +19,7 @@ class DijkstraAlgorithm:
     # Dijkstra Algorithm Core
     def dijkstra(self, graph, node = None):
 
-        self.unvisited = self.file['nodes'] # Set all ndoes
+        self.unvisited = self.file['nodes'] # Set all unvisited nodes
 
         # Verify is the starting node was informed
         if node == None:
@@ -32,13 +32,36 @@ class DijkstraAlgorithm:
 
         # Goes on all nodes
         while self.unvisited:
-            print(self.visited)
+            #print(self.visited)
             self.mountIteration(self.file['nodes'], self.current)
-            self.expandir(self.file['vertices'], self.current)
-            self.current = self.unvisited.pop()
-            self.visited.append(self.current)
+            self.unvisited.pop()
+            #self.visited.append(self.current)
+            print(self.iteration)
 
-        pass
+    # Mount the table iteration with node cost Method
+    def mountIteration(self, nodes, node):
+        for n in nodes:
+            if self.iteration.get(n) == None:
+                # Add the intial values [value,parent]
+                if n == node:
+                    self.iteration[n] = [0,None]
+                else:
+                    self.iteration[n] = [float("inf"),None]
+            else:
+                tempNode = self.expand(node, n)
+                if tempNode != None:
+                    if tempNode[0] < self.iteration[n][0]:
+                        self.iteration[n] = tempNode
+                pass
+
+    # Expand Node Method
+    def expand(self, nodeFrom, nodeTo):
+        for item in self.file['vertices'].keys():
+            if self.file['vertices'][item][0] == nodeFrom and self.file['vertices'][item][1] == nodeTo:
+                return [self.file['vertices'][item][2],self.file['vertices'][item][0]]
+            elif self.file['vertices'][item][1] == nodeFrom and self.file['vertices'][item][0] == nodeTo:
+                return [self.file['vertices'][item][2],self.file['vertices'][item][1]]
+        return None
 
     # Read Json Method
     def readJson(self):
@@ -48,30 +71,5 @@ class DijkstraAlgorithm:
             # Test the object
             assert isinstance(json_file, object)
             return json_file
-
-    # Mount the table iteration with node cost Method
-    def mountIteration(self, nodes, node):
-        for n in nodes:
-            # Add custo zero para o nó inicial
-            if n == node:
-                self.iteration[n] = 0
-            else:
-                self.iteration[n] = float("inf")
-
-    # Função que retorna as possíveis ações
-    def expandir(self, vertices, node):
-        # Cria caminhos
-        nodes = [] # Armazena vetices e custo
-        path  = [] # Armazena nodes já vizitados
-        for item in vertices.keys():
-            if vertices[item][0] == node and vertices[item][1] not in path:
-                path.append(vertices[item][1])
-                nodes.append([vertices[item][1],vertices[item][2]])
-            elif vertices[item][1] == node and vertices[item][0] not in path:
-                path.append(vertices[item][0])
-                nodes.append([vertices[item][0],vertices[item][2]])
-
-        print(nodes)
-
 
 DijkstraAlgorithm('A')
