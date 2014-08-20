@@ -35,7 +35,6 @@ class Algorithm:
 
         # Check all nodes length
         for i in range(len(self.nodeList.keys())):
-            #print(self.currentNode, i, self.nodeList.get(self.currentNode))
             self.setNextNodes()
             self.currentNode = self.getNextNode()
             self.nodeList[self.currentNode].setChecked
@@ -45,14 +44,14 @@ class Algorithm:
         for item in self.json['vertices']:
             # Check the first node vertice
             if self.json['vertices'][item][0] == self.currentNode and not self.nodeList[self.json['vertices'][item][1]].isChecked:
+                self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
                 if self.json['vertices'][item][2] < self.nodeList[self.json['vertices'][item][1]].getValue:
                     self.nodeList[self.json['vertices'][item][1]].setValue(self.json['vertices'][item][2])
-                    self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
             # Check the second node vertice
-            elif self.json['vertices'][item][1] == self.currentNode and not self.nodeList[self.json['vertices'][item][1]].isChecked:
+            elif self.json['vertices'][item][1] == self.currentNode and not self.nodeList[self.json['vertices'][item][0]].isChecked:
+                self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
                 if self.json['vertices'][item][2] < self.nodeList[self.json['vertices'][item][1]].getValue:
                     self.nodeList[self.json['vertices'][item][0]].setValue(self.json['vertices'][item][2])
-                    self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
 
     def getNextNode(self) -> object:
         nextNode = None
@@ -60,10 +59,9 @@ class Algorithm:
             if not self.nodeList[node].isChecked:
                 if nextNode is None and self.nodeList[node].getValue < float('inf'):
                     nextNode = node
-                elif self.nodeList[node].getValue < self.nodeList[nextNode].getValue:
+                elif nextNode is not None and self.nodeList[node].getValue < self.nodeList[nextNode].getValue:
                     nextNode = node
-
-        print(nextNode)
+        return nextNode
 
 
 class Node:
@@ -74,7 +72,7 @@ class Node:
     nodeChecked = False
 
     def __init__(self, node: object) -> object:
-        self.node = node
+        self.nodeName = node
 
     @property
     def getNode(self: object):
@@ -86,11 +84,17 @@ class Node:
 
     @property
     def getValue(self: object):
+        if self.nodeParent is not None:
+            return self.nodeParent.getValue + self.nodeValue
         return self.nodeValue
 
     def setParent(self, parent):
         assert isinstance(parent, object)
-        self.nodeParent = parent
+        if self.nodeParent is None:
+            self.nodeParent = parent
+        else:
+            if parent.getValue < self.nodeParent.getValue:
+                self.nodeParent = parent
 
     @property
     def setChecked(self: object):
