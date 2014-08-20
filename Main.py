@@ -1,6 +1,6 @@
 __author__ = "Thiago Augustus de Oliveira e Douglas"
 __license__ = "GPL"
-__version__ = "2.0.0"
+__version__ = "2.2.4"
 __email__ = "thiagoaugustusdeoliveira@gmail.com"
 __status__ = "Production"
 
@@ -26,7 +26,7 @@ class Algorithm:
         # Add the first node
         self.currentNode = n
         self.nodeList[self.currentNode].setValue(0)
-        self.nodeList[self.currentNode].setChecked
+        self.nodeList[self.currentNode]
 
         #Call the algorithm
         self.dijkstra()
@@ -40,17 +40,62 @@ class Algorithm:
             self.nodeList[self.currentNode].setChecked
             print(self.currentNode)
 
+
+    def setNextNodes(self):
+        for item in self.json['vertices']:
+            # Current Node exist?
+            if self.currentNode == self.json['vertices'][item][0]:
+                # Isn't the next node visited?
+                if not self.nodeList[self.json['vertices'][item][1]].isChecked:
+                    # Is the next node value infinity?
+                    if self.nodeList[self.json['vertices'][item][1]].getNodeValue == float('inf'):
+                        #
+                        self.nodeList[self.json['vertices'][item][1]].setValue(self.json['vertices'][item][2])
+                        self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
+                    else:
+                        pass
+                        #print(self.json['vertices'][item][1])
+            # Current Node exits?
+            elif self.currentNode == self.json['vertices'][item][1]:
+                 # Isn't the next node visited?
+                if not self.nodeList[self.json['vertices'][item][0]].isChecked:
+                    # Is the next node value infinity?
+                    if self.nodeList[self.json['vertices'][item][0]].getNodeValue == float('inf'):
+                        #
+                        self.nodeList[self.json['vertices'][item][0]].setValue(self.json['vertices'][item][2])
+                        self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
+
+    def getNextNode(self) -> object:
+
+        nextNode = None
+        #
+        for node in self.nodeList:
+            #
+            if not self.nodeList[node].isChecked:
+                #
+                if not self.nodeList[node].getNodeValue == float('inf'):
+                    #
+                    if nextNode is None:
+                        nextNode = self.nodeList[node].getNode
+                    #
+                    elif self.nodeList[node].getValue < self.nodeList[nextNode].getValue:
+                        nextNode = self.nodeList[node].getNode
+        #
+        return nextNode
+
+    '''
     def setNextNodes(self) -> object:
         for item in self.json['vertices']:
-            # Check the first node vertice
+            # Check the first vertice node
             if self.json['vertices'][item][0] == self.currentNode and not self.nodeList[self.json['vertices'][item][1]].isChecked:
                 self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
-                if self.json['vertices'][item][2] < self.nodeList[self.json['vertices'][item][1]].getValue:
+                # Case the node parent value + actual node value is lower than node list value
+                if (self.nodeList[self.json['vertices'][item][1]].getParent.getValue + self.json['vertices'][item][2]) < self.nodeList[self.json['vertices'][item][1]].getValue:
                     self.nodeList[self.json['vertices'][item][1]].setValue(self.json['vertices'][item][2])
-            # Check the second node vertice
+            # Check the second vertice node
             elif self.json['vertices'][item][1] == self.currentNode and not self.nodeList[self.json['vertices'][item][0]].isChecked:
                 self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
-                if self.json['vertices'][item][2] < self.nodeList[self.json['vertices'][item][1]].getValue:
+                if (self.nodeList[self.json['vertices'][item][0]].getParent.getValue + self.json['vertices'][item][2]) < self.nodeList[self.json['vertices'][item][1]].getValue:
                     self.nodeList[self.json['vertices'][item][0]].setValue(self.json['vertices'][item][2])
 
     def getNextNode(self) -> object:
@@ -62,6 +107,7 @@ class Algorithm:
                 elif nextNode is not None and self.nodeList[node].getValue < self.nodeList[nextNode].getValue:
                     nextNode = node
         return nextNode
+    '''
 
 
 class Node:
@@ -83,6 +129,10 @@ class Node:
         self.nodeValue = value
 
     @property
+    def getNodeValue(self: object):
+        return self.nodeValue
+
+    @property
     def getValue(self: object):
         if self.nodeParent is not None:
             return self.nodeParent.getValue + self.nodeValue
@@ -95,6 +145,10 @@ class Node:
         else:
             if parent.getValue < self.nodeParent.getValue:
                 self.nodeParent = parent
+
+    @property
+    def getParent(self: object):
+        return self.nodeParent
 
     @property
     def setChecked(self: object):
