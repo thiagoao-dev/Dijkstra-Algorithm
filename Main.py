@@ -38,7 +38,7 @@ class Algorithm:
             self.setNextNodes()
             self.currentNode = self.getNextNode()
             self.nodeList[self.currentNode].setChecked
-            print("Nó selecionado",self.currentNode)
+            print("next Node",self.currentNode,self.nodeList['A'].getValue,self.nodeList['B'].getValue,self.nodeList['C'].getValue,self.nodeList['D'].getValue,self.nodeList['E'].getValue,self.nodeList['F'].getValue,self.nodeList['G'].getValue,self.nodeList['H'].getValue)
 
     def setNextNodes(self):
         for item in self.json['vertices']:
@@ -53,7 +53,8 @@ class Algorithm:
                         self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
                     #
                     else:
-                        print("Tinha que ter entrado aqui!!!", self.nodeList[self.json['vertices'][item][1]].getNode)
+                        #if self.nodeList[self.json['vertices'][item][1]].getParent.getNodeValue < self.nodeList[self.json['vertices'][item][1]].getNodeValue:
+                        print(self.nodeList[self.json['vertices'][item][1]].getParent.getNode)
             # Current Node exits?
             elif self.currentNode == self.json['vertices'][item][1]:
                  # Isn't the next node visited?
@@ -65,7 +66,9 @@ class Algorithm:
                         self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
                     #
                     else:
-                        print("Tinha que ter entrado aqui!!!", self.nodeList[self.json['vertices'][item][0]].getNode)
+                        #self.nodeList[self.json['vertices'][item][0]].getNodeValue
+                        #print(self.nodeList[self.json['vertices'][item][0]].getValue)
+                        pass
 
     def getNextNode(self) -> object:
 
