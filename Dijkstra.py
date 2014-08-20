@@ -1,4 +1,4 @@
-__author__ = "Thiago Augustus e Douglas"
+__author__ = "Thiago Augustus de Oliveira e Douglas"
 __license__ = "GPL"
 __version__ = "2.0.0"
 __email__ = "thiagoaugustusdeoliveira@gmail.com"
@@ -59,7 +59,7 @@ class Node:
     unchecked = True
     value = float('inf')
 
-    def __init__(self, node) -> object:
+    def __init__(self, node: object) -> object:
         self.node = node
 
     def getNode(self):
