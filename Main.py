@@ -26,6 +26,7 @@ class Algorithm:
         # Add the first node
         self.currentNode = n
         self.nodeList[self.currentNode].setValue(0)
+        self.nodeList[self.currentNode].setChecked
 
         #Call the algorithm
         self.dijkstra()
@@ -34,22 +35,39 @@ class Algorithm:
 
         # Check all nodes length
         for i in range(len(self.nodeList.keys())):
-            self.json['vertices']
-            print(self.currentNode, i, self.nodeList.get(self.currentNode))
-            pass
+            #print(self.currentNode, i, self.nodeList.get(self.currentNode))
+            self.setNextNodes()
+            self.currentNode = self.getNextNode()
+            self.nodeList[self.currentNode].setChecked
+            print(self.currentNode)
 
-    #Method GetVertices return[[nextNode,valueCost]]
-    def getVertices(self, node):
-        vertices = []
+    def setNextNodes(self) -> object:
         for item in self.json['vertices']:
-            if self.json['vertices'][item][0] == node and not self.nodeList[self.json['vertices'][item][1]].isChecked:
-                vertices.append([self.json['vertices'][item][1], self.json['vertices'][item][2]])
-            elif self.json['vertices'][item][1] == node and not self.nodeList[self.json['vertices'][item][0]].isChecked:
-                vertices.append([self.json['vertices'][item][0], self.json['vertices'][item][2]])
-        return vertices
+            # Check the first node vertice
+            if self.json['vertices'][item][0] == self.currentNode and not self.nodeList[self.json['vertices'][item][1]].isChecked:
+                if self.json['vertices'][item][2] < self.nodeList[self.json['vertices'][item][1]].getValue:
+                    self.nodeList[self.json['vertices'][item][1]].setValue(self.json['vertices'][item][2])
+                    self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
+            # Check the second node vertice
+            elif self.json['vertices'][item][1] == self.currentNode and not self.nodeList[self.json['vertices'][item][1]].isChecked:
+                if self.json['vertices'][item][2] < self.nodeList[self.json['vertices'][item][1]].getValue:
+                    self.nodeList[self.json['vertices'][item][0]].setValue(self.json['vertices'][item][2])
+                    self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
+
+    def getNextNode(self) -> object:
+        nextNode = None
+        for node in self.nodeList:
+            if not self.nodeList[node].isChecked:
+                if nextNode is None and self.nodeList[node].getValue < float('inf'):
+                    nextNode = node
+                elif self.nodeList[node].getValue < self.nodeList[nextNode].getValue:
+                    nextNode = node
+
+        print(nextNode)
 
 
 class Node:
+
     nodeName = None
     nodeValue = float('inf')
     nodeParent = None
@@ -58,16 +76,29 @@ class Node:
     def __init__(self, node: object) -> object:
         self.node = node
 
+    @property
+    def getNode(self: object):
+        return self.nodeName
+
     def setValue(self, value):
         assert isinstance(value, object)
         self.nodeValue = value
+
+    @property
+    def getValue(self: object):
+        return self.nodeValue
 
     def setParent(self, parent):
         assert isinstance(parent, object)
         self.nodeParent = parent
 
-    def setChecked(self):
+    @property
+    def setChecked(self: object):
         self.nodeChecked = True
+
+    @property
+    def isChecked(self) -> object:
+        return self.nodeChecked
 
 
 class JsonRead:
