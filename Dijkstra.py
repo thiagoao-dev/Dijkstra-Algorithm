@@ -6,8 +6,8 @@ __status__ = "Production"
 
 import json
 
-class Algorithm:
 
+class Algorithm:
     path = []
     json = None
     nodeList = {}
@@ -24,54 +24,60 @@ class Algorithm:
             self.nodeList[i] = node
 
         # Add the first node
-        self.currentNode = self.nodeList.get(n)
-        self.currentNode.setValue(0)
+        self.currentNode = n
+        self.nodeList[self.currentNode].setValue(0)
 
         # Call the algorithm
         self.dijkstra()
 
     def dijkstra(self):
 
+        # Check all nodes length
         for i in range(len(self.nodeList.keys())):
-            self.currentNode.setVertices(self.getVertices(self.currentNode.getNode()))
-            vertice = self.currentNode.getVertice
+            # Set the node vertices
+            self.nodeList[self.currentNode].setVertices(self.getVertices(self.nodeList[self.currentNode].getNode))
+            # Return a node with smallest value [nextNode, value]
+            vertice = self.nodeList[self.currentNode].getVertice
             newNode = self.nodeList.get(vertice[0])
+            print(self.currentNode, newNode.getNode)
             newNode.setValue(vertice[1])
-            newNode.setParent(self.currentNode)
-            self.currentNode.setUnchecked()
+            newNode.setParent(self.nodeList[self.currentNode])
+            self.nodeList[self.currentNode].setUnchecked
+            self.currentNode = newNode.getNode
 
     # Method GetVertices return[[nextNode,valueCost]]
     def getVertices(self, node):
         vertices = []
         for item in self.json['vertices']:
-            if self.json['vertices'][item][0] == node:
-                vertices.append([self.json['vertices'][item][1],self.json['vertices'][item][2]])
-            elif self.json['vertices'][item][1] == node:
-                vertices.append([self.json['vertices'][item][0],self.json['vertices'][item][2]])
+            if self.json['vertices'][item][0] == node and not self.nodeList[self.json['vertices'][item][1]].isChecked:
+                vertices.append([self.json['vertices'][item][1], self.json['vertices'][item][2]])
+            elif self.json['vertices'][item][1] == node and not self.nodeList[self.json['vertices'][item][0]].isChecked:
+                vertices.append([self.json['vertices'][item][0], self.json['vertices'][item][2]])
         return vertices
 
 
 class Node:
-
     node = None
     parent = None
     vertices = []
-    unchecked = True
+    checked = False
     value = float('inf')
 
     def __init__(self, node: object) -> object:
         self.node = node
 
-    def getNode(self):
+    @property
+    def getNode(self: object):
+        assert isinstance(self.node, object)
         return self.node
 
-    def setParent(self, node: object):
-        self.node = node
+    def setParent(self, parent: object):
+        self.parent = parent
 
     @property
     def getParent(self) -> object:
-        assert isinstance(self.node, object)
-        return self.node
+        assert isinstance(self.parent, object)
+        return self.parent
 
     def setVertices(self, vertices):
         self.vertices = vertices
@@ -80,20 +86,34 @@ class Node:
     def getVertice(self) -> object:
         lower = [None, float('inf')]
         for vertice in self.vertices:
-            if (vertice[1]+self.value) < lower[1]:
+            if (vertice[1] + self.value) < lower[1]:
                 assert isinstance(vertice, object)
                 vertice[1] += self.value
                 lower = vertice
         return lower
 
-    def setUnchecked(self):
-        self.unchecked = False
+    @property
+    def setUnchecked(self) -> object:
+        self.checked = True
+
+    @property
+    def isChecked(self) -> object:
+        assert isinstance(self.checked, object)
+        return self.checked
 
     def setValue(self, value):
+        assert isinstance(value, object)
         self.value = value
 
-    def getValue(self):
-        return self.value
+    @property
+    def getValue(self) -> object:
+        assert isinstance(self.value, object)
+        assert isinstance(self.parent, object)
+        # Check if the node have parent node
+        if self.parent is not None:
+            return self.value + self.parent.getValue
+        else:
+            return self.value
 
 class JsonRead:
     def __init__(self):
