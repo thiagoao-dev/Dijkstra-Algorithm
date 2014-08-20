@@ -26,7 +26,7 @@ class Algorithm:
         # Add the first node
         self.currentNode = n
         self.nodeList[self.currentNode].setValue(0)
-        self.nodeList[self.currentNode]
+        self.nodeList[self.currentNode].setChecked
 
         #Call the algorithm
         self.dijkstra()
@@ -34,12 +34,11 @@ class Algorithm:
     def dijkstra(self):
 
         # Check all nodes length
-        for i in range(len(self.nodeList.keys())):
+        for i in range(len(self.nodeList.keys())-1):
             self.setNextNodes()
             self.currentNode = self.getNextNode()
             self.nodeList[self.currentNode].setChecked
-            print(self.currentNode)
-
+            print("Nó selecionado",self.currentNode)
 
     def setNextNodes(self):
         for item in self.json['vertices']:
@@ -52,9 +51,9 @@ class Algorithm:
                         #
                         self.nodeList[self.json['vertices'][item][1]].setValue(self.json['vertices'][item][2])
                         self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
+                    #
                     else:
-                        pass
-                        #print(self.json['vertices'][item][1])
+                        print("Tinha que ter entrado aqui!!!", self.nodeList[self.json['vertices'][item][1]].getNode)
             # Current Node exits?
             elif self.currentNode == self.json['vertices'][item][1]:
                  # Isn't the next node visited?
@@ -63,7 +62,10 @@ class Algorithm:
                     if self.nodeList[self.json['vertices'][item][0]].getNodeValue == float('inf'):
                         #
                         self.nodeList[self.json['vertices'][item][0]].setValue(self.json['vertices'][item][2])
-                        self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
+                        self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
+                    #
+                    else:
+                        print("Tinha que ter entrado aqui!!!", self.nodeList[self.json['vertices'][item][0]].getNode)
 
     def getNextNode(self) -> object:
 
@@ -82,32 +84,6 @@ class Algorithm:
                         nextNode = self.nodeList[node].getNode
         #
         return nextNode
-
-    '''
-    def setNextNodes(self) -> object:
-        for item in self.json['vertices']:
-            # Check the first vertice node
-            if self.json['vertices'][item][0] == self.currentNode and not self.nodeList[self.json['vertices'][item][1]].isChecked:
-                self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
-                # Case the node parent value + actual node value is lower than node list value
-                if (self.nodeList[self.json['vertices'][item][1]].getParent.getValue + self.json['vertices'][item][2]) < self.nodeList[self.json['vertices'][item][1]].getValue:
-                    self.nodeList[self.json['vertices'][item][1]].setValue(self.json['vertices'][item][2])
-            # Check the second vertice node
-            elif self.json['vertices'][item][1] == self.currentNode and not self.nodeList[self.json['vertices'][item][0]].isChecked:
-                self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
-                if (self.nodeList[self.json['vertices'][item][0]].getParent.getValue + self.json['vertices'][item][2]) < self.nodeList[self.json['vertices'][item][1]].getValue:
-                    self.nodeList[self.json['vertices'][item][0]].setValue(self.json['vertices'][item][2])
-
-    def getNextNode(self) -> object:
-        nextNode = None
-        for node in self.nodeList:
-            if not self.nodeList[node].isChecked:
-                if nextNode is None and self.nodeList[node].getValue < float('inf'):
-                    nextNode = node
-                elif nextNode is not None and self.nodeList[node].getValue < self.nodeList[nextNode].getValue:
-                    nextNode = node
-        return nextNode
-    '''
 
 
 class Node:
