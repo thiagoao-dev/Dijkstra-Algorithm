@@ -9,6 +9,7 @@ import json
 
 class Algorithm:
 
+    #
     json = None
     nodeList = {}
     currentNode = None
@@ -35,10 +36,14 @@ class Algorithm:
 
         # Check all nodes length
         for i in range(len(self.nodeList.keys())-1):
+            #
+            self.printIterations(i)
             self.setNextNodes()
             self.currentNode = self.getNextNode()
             self.nodeList[self.currentNode].setChecked
-            print("Nó selecionado",self.currentNode)
+        #
+        self.printIterations(i)
+        print("Caminho do primeiro ao último nó",self.nodeList[self.currentNode].getExit)
 
     def setNextNodes(self):
         for item in self.json['vertices']:
@@ -52,8 +57,10 @@ class Algorithm:
                         self.nodeList[self.json['vertices'][item][1]].setValue(self.json['vertices'][item][2])
                         self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
                     #
-                    else:
-                        print("Tinha que ter entrado aqui!!!", self.nodeList[self.json['vertices'][item][1]].getNode)
+                    elif (self.nodeList[self.currentNode].getValue + self.json['vertices'][item][2]) < self.nodeList[self.json['vertices'][item][1]].getValue:
+                        #
+                        self.nodeList[self.json['vertices'][item][1]].setParent(self.nodeList[self.currentNode])
+                        self.nodeList[self.json['vertices'][item][1]].setValue(self.nodeList[self.currentNode].getValue + self.json['vertices'][item][2])
             # Current Node exits?
             elif self.currentNode == self.json['vertices'][item][1]:
                  # Isn't the next node visited?
@@ -64,11 +71,14 @@ class Algorithm:
                         self.nodeList[self.json['vertices'][item][0]].setValue(self.json['vertices'][item][2])
                         self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
                     #
-                    else:
-                        print("Tinha que ter entrado aqui!!!", self.nodeList[self.json['vertices'][item][0]].getNode)
+                    elif (self.nodeList[self.currentNode].getValue + self.json['vertices'][item][2]) < self.nodeList[self.json['vertices'][item][0]].getValue:
+                        #
+                        self.nodeList[self.json['vertices'][item][0]].setParent(self.nodeList[self.currentNode])
+                        self.nodeList[self.json['vertices'][item][0]].setValue(self.nodeList[self.currentNode].getValue + self.json['vertices'][item][2])
 
+    #
     def getNextNode(self) -> object:
-
+        #
         nextNode = None
         #
         for node in self.nodeList:
@@ -78,12 +88,29 @@ class Algorithm:
                 if not self.nodeList[node].getNodeValue == float('inf'):
                     #
                     if nextNode is None:
+                        #
                         nextNode = self.nodeList[node].getNode
                     #
                     elif self.nodeList[node].getValue < self.nodeList[nextNode].getValue:
+                        #
                         nextNode = self.nodeList[node].getNode
         #
         return nextNode
+
+    #
+    def printIterations(self, iteration):
+        #
+        print(iteration+1,"|",
+              self.nodeList['A'].getNode,self.nodeList['A'].getValue,'.',
+              self.nodeList['B'].getNode,self.nodeList['B'].getValue,'.',
+              self.nodeList['C'].getNode,self.nodeList['C'].getValue,'.',
+              self.nodeList['D'].getNode,self.nodeList['D'].getValue,'.',
+              self.nodeList['E'].getNode,self.nodeList['E'].getValue,'.',
+              self.nodeList['F'].getNode,self.nodeList['F'].getValue,'.',
+              self.nodeList['G'].getNode,self.nodeList['G'].getValue,'.',
+              self.nodeList['H'].getNode,self.nodeList['H'].getValue)
+        #
+        print("Nó",self.currentNode,"de valor",self.nodeList[self.currentNode].getValue)
 
 
 class Node:
@@ -133,6 +160,13 @@ class Node:
     @property
     def isChecked(self) -> object:
         return self.nodeChecked
+
+    @property
+    def getExit(self):
+        if self.nodeParent is None:
+            return self.nodeName
+        else:
+            return self.nodeParent.getExit +" -> "+ self.nodeName
 
 
 class JsonRead:
