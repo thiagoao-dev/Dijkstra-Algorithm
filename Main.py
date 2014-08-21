@@ -1,8 +1,8 @@
-__author__ = "Thiago Augustus de Oliveira e Douglas"
+__author__  = "Thiago Augustus de Oliveira e Douglas Komar"
 __license__ = "GPL"
-__version__ = "2.2.4"
-__email__ = "thiagoaugustusdeoliveira@gmail.com"
-__status__ = "Production"
+__version__ = "4.3.4"
+__email__   = "thiagoaugustusdeoliveira@gmail.com"
+__status__  = "Production"
 
 import json
 
