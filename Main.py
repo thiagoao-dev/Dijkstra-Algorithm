@@ -1,4 +1,4 @@
-__author__  = "Thiago Augustus de Oliveira e Douglas Komar"
+__author__  = "Thiago Augustus de Oliveira"
 __license__ = "GPL"
 __version__ = "4.3.4"
 __email__   = "thiagoaugustusdeoliveira@gmail.com"
